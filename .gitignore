@@ -10,6 +10,7 @@ data/cache/
 data/cloud_ranges/*.json
 data/laws/*.pdf
 db/demo_token.txt
+db/preview/
 .req-win.txt
 .pytest_cache/
 data/laws/*.txt

@@ -1,5 +1,9 @@
 # Mutabiq · مطابق
 
+**Latest pitch demo:** the no-login business-law/governance review and chatbot
+are documented in [DEMO.md](DEMO.md). Run `python run_demo.py` after installing
+requirements. The instructions below describe the retained original application.
+
 Compliance map for Jordanian companies: which rules apply (PDPL, NCSC framework, and GDPR / ISO 27001
 when expanding to Europe), a passive scan of the company's own website and infrastructure, and
 cited explanations in Arabic or English for the owner, the developer, or the lawyer.

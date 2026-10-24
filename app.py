@@ -126,7 +126,7 @@ with st.sidebar:
         import threading
         threading.Thread(target=warm_up, daemon=True).start()
     if status["llm_ready"]:
-        st.success(f"{T['ai_badge']}\n\n`{MODEL}` · Apache-2.0  \n`bge-m3` · MIT", icon="🧠")
+        st.success(f"{T['ai_badge']}\n\n`{MODEL}`  \n`bge-m3`", icon="🧠")
     else:
         st.warning(T["llm_off"], icon="🟠")
     if ss.get("user"):

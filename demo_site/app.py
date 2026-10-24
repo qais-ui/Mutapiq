@@ -67,7 +67,8 @@ def mutabiq_token():
     # Ownership proof for Mutabiq. Set MUTABIQ_VERIFY_TOKEN to the value printed by scripts/seed.py.
     # (*.onrender.com DNS can't be edited, so this file method is how the demo proves ownership.)
     token = os.environ.get("MUTABIQ_VERIFY_TOKEN", "")
-    saved = Path(__file__).resolve().parent.parent / "db" / "demo_token.txt"
+    default_db = Path(__file__).resolve().parent.parent / "db" / "mutabiq.db"
+    saved = Path(os.environ.get("MUTABIQ_DB", str(default_db))).parent / "demo_token.txt"
     if not token and saved.exists():          # local demo: use the token scripts/seed.py saved
         token = saved.read_text(encoding="utf-8").strip()
     return token, 200, {"Content-Type": "text/plain"}
