@@ -1,8 +1,26 @@
 # Where the build stands — 2026-10-24
 
-All code is written. What's left needs your laptop: internet (models, law texts, deployment) and a GPU (the model).
-Tests: `python -m pytest -q` → 10 passed. The UI flow was tested end to end with the model mocked,
-because the build sandbox can't download Ollama or models. **Real Qwen output has not been seen yet — step 3 below.**
+## Completion update
+
+The remaining code tasks are implemented:
+
+- Scan-result deletion 30 days after contract expiry or recorded revocation; a daily cleanup command is available.
+- Company-scoped audit-log JSON download, including ended engagements, with ownership checked in the database.
+- Encrypted, scan-scoped false-positive dismissal reasons, restore controls, score recalculation and disclosure in reports.
+- Strict policy quote validation, safe model boolean parsing, grounded Q&A citation checks and exact model-tag detection.
+- Serialised audit-chain appends and transactionally recorded review/deletion events.
+
+Run `python -m pip install -r requirements-dev.txt` and `python -m pytest -q`.
+The suite includes the original rules/gate tests, new retention/access/review/AI regressions,
+and Streamlit script-runner UI checks in both languages. Network and model calls in UI tests are mocked;
+these are not live-model or browser acceptance tests.
+
+**Live Qwen evaluation and prewarming still require Ollama and the exact model on the demo laptop.**
+The attached project documentation reports a successful intake on that laptop; this environment
+does not have Ollama, so it cannot independently validate the 53-check evaluation or laptop timings.
+The evaluation script now exits nonzero if any check fails.
+
+See `docs/COMPLETION.md` for retention scheduling, rollout and remaining operational tasks.
 
 ## Run it on Windows (one double-click)
 

@@ -1,9 +1,5 @@
 """Run: python -m pytest -q   (uses a temporary database, no network needed)"""
-import os
-import tempfile
-
-os.environ["MUTABIQ_DB"] = os.path.join(tempfile.mkdtemp(), "test.db")
-os.environ["MUTABIQ_NO_CACHE"] = "1"
+import pytest
 
 from core import audit  # noqa: E402
 from core.db import connect, init_db  # noqa: E402
@@ -12,15 +8,16 @@ from core.gate import authorize_scan  # noqa: E402
 from core.rules import evaluate  # noqa: E402
 from core.schemas import CompanyProfile, ScanResult  # noqa: E402
 
-init_db()
-cid = create_client("Test Co", "CR-1")
-create_user("t", "pw", "client", cid)
-create_engagement("ENG-T", cid, ["example.jo"], "2000-01-01", "2999-01-01", "A", "CEO")
-USER = check_login("t", "pw")
+@pytest.fixture(autouse=True)
+def user(isolated_db):
+    cid = create_client("Test Co", "CR-1")
+    create_user("t", "pw", "client", cid)
+    create_engagement("ENG-T", cid, ["example.jo"], "2000-01-01", "2999-01-01", "A", "CEO")
+    return check_login("t", "pw")
 
 
-def test_out_of_scope_is_blocked_and_logged():
-    r = authorize_scan(USER, "not-ours.com")
+def test_out_of_scope_is_blocked_and_logged(user):
+    r = authorize_scan(user, "not-ours.com")
     assert not r.allowed and "in_scope" in r.failed
     assert audit.entries(1)[0]["allowed"] == 0
 

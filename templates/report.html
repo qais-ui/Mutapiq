@@ -53,6 +53,15 @@
 <pre style="white-space: pre-wrap; font-family: inherit;">{{ privacy_draft }}</pre>
 {% endif %}
 
+{% if dismissals %}
+<h2>{{ 'ملاحظات استُبعدت بمراجعة العميل' if lang == 'ar' else 'Client-dismissed findings' }}</h2>
+<p>{{ 'استُبعدت من الدرجة بناءً على مراجعة العميل، ولم يتحقق منها طرف مستقل.' if lang == 'ar' else 'Excluded from the score following client review; not independently verified.' }}</p>
+{% for d in dismissals %}
+<div class="finding"><b>{{ d.finding_id }}</b><p>{{ d.reason }}</p>
+<div class="meta">{{ d.created_at }} · {{ 'المستخدم' if lang == 'ar' else 'User' }} {{ d.user_id }}</div></div>
+{% endfor %}
+{% endif %}
+
 <div class="disclaimer">{{ t.disclaimer }}</div>
 </body>
 </html>

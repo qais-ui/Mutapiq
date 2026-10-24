@@ -34,7 +34,8 @@ class GateResult:
     failed: list[str] = field(default_factory=list)
 
 
-def authorize_scan(user: dict | None, target: str, scan_type: str = "passive_web") -> GateResult:
+def authorize_scan(user: dict | None, target: str, scan_type: str = "passive_web",
+                   engagement_id: str | None = None) -> GateResult:
     domain = normalize_target(target)
     checks = {"authenticated": False, "active_contract": False, "in_scope": False,
               "owner_verified": False, "scan_allowed": False}
@@ -43,6 +44,8 @@ def authorize_scan(user: dict | None, target: str, scan_type: str = "passive_web
     if user and user.get("role") == "client" and user.get("client_id"):
         checks["authenticated"] = True
         engs = active_engagements_for_client(user["client_id"])
+        if engagement_id is not None:
+            engs = [e for e in engs if e["id"] == engagement_id]
         checks["active_contract"] = bool(engs)
         eng = next((e for e in engs if domain in e["scope"]), None)
         checks["in_scope"] = eng is not None

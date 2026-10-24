@@ -58,3 +58,12 @@ CREATE TABLE IF NOT EXISTS audit_log (
     prev_hash       TEXT NOT NULL,
     hash            TEXT NOT NULL           -- sha256(prev_hash + canonical row)
 );
+
+CREATE TABLE IF NOT EXISTS finding_dismissals (
+    scan_id         INTEGER NOT NULL REFERENCES scans(id) ON DELETE CASCADE,
+    finding_id      TEXT NOT NULL,
+    reason_enc      BLOB NOT NULL,
+    user_id         INTEGER NOT NULL REFERENCES users(id),
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (scan_id, finding_id)
+);

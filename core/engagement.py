@@ -80,9 +80,14 @@ def list_engagements() -> list[dict]:
 
 
 def set_status(eng_id: str, status: str, admin_id: int | None = None) -> None:
+    if status not in ("revoked", "expired"):
+        raise ValueError("Only revocation or expiry is supported; record a new contract to renew")
     with connect() as c:
+        c.execute("BEGIN IMMEDIATE")
+        if not c.execute("SELECT 1 FROM engagements WHERE id=?", (eng_id,)).fetchone():
+            raise ValueError("Unknown engagement")
         c.execute("UPDATE engagements SET status=? WHERE id=?", (status, eng_id))
-    audit.log(f"engagement_{status}", admin_id, None, eng_id, True)
+        audit.append(c, f"engagement_{status}", admin_id, None, eng_id, True)
 
 
 def expire_old() -> int:
@@ -91,3 +96,36 @@ def expire_old() -> int:
     with connect() as c:
         cur = c.execute("UPDATE engagements SET status='expired' WHERE status='active' AND valid_to<?", (today,))
         return cur.rowcount
+
+
+def purge_expired_scans(today: dt.date | None = None) -> int:
+    """Delete results 30 days after expiry or recorded revocation. Keep audit metadata.
+
+    Called on each app run and by scripts/cleanup.py (schedule daily for unattended cleanup).
+    Global AI caches are invalidated conservatively because legacy keys have no client ownership.
+    """
+    from core.db import ROOT
+
+    cutoff = ((today or dt.datetime.now(dt.timezone.utc).date()) - dt.timedelta(days=30)).isoformat()
+    with connect() as c:
+        c.execute("PRAGMA secure_delete = ON")
+        c.execute("BEGIN IMMEDIATE")
+        due = c.execute(
+            "SELECT e.id FROM engagements e WHERE e.valid_to<=? OR "
+            "(e.status='revoked' AND EXISTS (SELECT 1 FROM audit_log a "
+            "WHERE a.engagement_id=e.id AND a.action='engagement_revoked' AND date(a.ts)<=?))",
+            (cutoff, cutoff)).fetchall()
+        total = 0
+        for e in due:
+            count = c.execute("SELECT COUNT(*) FROM scans WHERE engagement_id=?", (e["id"],)).fetchone()[0]
+            if not count:
+                continue
+            # Remove caches before committing deletion; retry safely if filesystem deletion fails.
+            for name in ("ai.json", "explanations.json"):
+                (ROOT / "data" / "cache" / name).unlink(missing_ok=True)
+            c.execute("DELETE FROM finding_dismissals WHERE scan_id IN "
+                      "(SELECT id FROM scans WHERE engagement_id=?)", (e["id"],))
+            c.execute("DELETE FROM scans WHERE engagement_id=?", (e["id"],))
+            audit.append(c, "scan_data_purged", engagement_id=e["id"], details={"scans_deleted": count})
+            total += count
+    return total

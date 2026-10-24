@@ -9,9 +9,10 @@ import json
 import streamlit as st
 
 from core import audit
+from core import review
 from core.db import DB_PATH, connect, encrypt, init_db
 from core.engagement import (active_engagements_for_client, check_login, create_client, create_engagement,
-                             expire_old, list_engagements, set_status)
+                             expire_old, list_engagements, purge_expired_scans, set_status)
 from core.ai import analyze_privacy_policy, ask, profile_from_text
 from core.gate import authorize_scan
 from core.infra import map_infra
@@ -24,9 +25,9 @@ from core.verify import LOCAL_HOSTS
 
 st.set_page_config(page_title="Mutabiq · مطابق", page_icon="🛡️", layout="wide")
 
-if not DB_PATH.exists():
-    init_db()
+init_db()  # Idempotent schema upgrades for existing installations.
 expire_old()
+purged_scans = purge_expired_scans()
 
 # ------------------------------------------------------------------ i18n
 UI = {
@@ -106,6 +107,8 @@ DATA_TYPES = ["basic", "health", "financial", "biometric", "children", "location
 def cached_pdf(html: str) -> bytes | None:
     return to_pdf(html)
 
+if purged_scans:
+    cached_pdf.clear()
 
 ss = st.session_state
 ss.setdefault("lang", "en")
@@ -162,6 +165,16 @@ if not ss.get("user"):
 
 user = ss.user
 
+REVIEW_UI = {
+    "en": {"export": "Download your company's audit log (JSON)", "dismiss": "Dismiss as false positive",
+           "reason": "Reason (5–2000 characters)", "dismissed": "Dismissed findings",
+           "restore": "Restore finding", "note": "Client-reviewed dismissals are excluded from the score, not independently verified."},
+    "ar": {"export": "تنزيل سجل تدقيق شركتكم (JSON)", "dismiss": "استبعاد نتيجة إيجابية كاذبة",
+           "reason": "سبب الاستبعاد (5–2000 حرف)", "dismissed": "الملاحظات المستبعدة",
+           "restore": "استعادة الملاحظة", "note": "تُستبعد هذه الملاحظات من الدرجة بمراجعة العميل، ولم يتحقق منها طرف مستقل."},
+}
+RT = REVIEW_UI[ss.lang]
+
 
 # ------------------------------------------------------------------ admin view
 def admin_view():
@@ -216,12 +229,20 @@ if user["role"] == "admin":
     st.stop()
 
 # ------------------------------------------------------------------ client view
+if st.download_button(RT["export"], audit.export_for_client(user["id"]),
+                      "mutabiq_audit.json", "application/json"):
+    audit.log("audit_exported", user["id"], details={"client_id": user["client_id"]})
 engs = active_engagements_for_client(user["client_id"])
 st.header(T["eng"])
 if not engs:
     st.warning(T["no_eng"])
     st.stop()
-eng = engs[0]
+eng = st.selectbox("Engagement · الاتفاقية", engs, format_func=lambda e: e["id"]) if len(engs) > 1 else engs[0]
+if ss.get("_selected_engagement") != eng["id"]:
+    for k in ("profile", "scan", "report", "confirmed", "explanations", "ai_done", "qa", "privacy_draft",
+              "scan_id", "engagement_id", "ai_notes"):
+        ss.pop(k, None)
+    ss["_selected_engagement"] = eng["id"]
 c1, c2 = st.columns(2)
 c1.markdown(f"**{eng['id']}** · {eng['legal_name']}  \n{T['scope']}: `{', '.join(eng['scope'])}`")
 c2.markdown(f"{T['valid']}: {eng['valid_from']} → {eng['valid_to']}")
@@ -260,6 +281,8 @@ with st.form(f"intake{ss.get('pv', 0)}"):
                                     hosting_country=hosting.strip().upper() or None, is_critical_sector=crit,
                                     is_government=gov, expanding_to_eu=eu, processing_is_core_activity=core_act)
         ss.pop("report", None)
+        ss.explanations, ss.ai_done = {}, {}
+        ss.pop("privacy_draft", None)
         st.rerun()
 
 st.header(T["scan"])
@@ -269,7 +292,7 @@ if c2.button(T["run"], type="primary", use_container_width=True):
     if not ss.get("profile"):
         st.warning(T["fill_profile"])
     else:
-        gate = authorize_scan(user, target)
+        gate = authorize_scan(user, target, engagement_id=eng["id"])
         for k, ok in gate.checks.items():
             st.markdown(f"{'✅' if ok else '❌'} {CHECK_LABELS[ss.lang][k]}")
         if not gate.allowed:
@@ -288,10 +311,19 @@ if c2.button(T["run"], type="primary", use_container_width=True):
                     res.privacy_policy["analysis"] = analyze_privacy_policy(res.privacy_policy.get("text_excerpt", ""))
             ss.profile = ss.profile.model_copy(update={"domain": host})
             ss.scan, ss.confirmed, ss.engagement_id = res, {}, gate.engagement["id"]
-            ss.explanations, ss.saved_scan = {}, False
+            ss.explanations, ss.ai_done = {}, {}
+            ss.pop("qa", None)
+            ss.pop("privacy_draft", None)
+            original_report = evaluate(ss.profile, res)
+            original_report.engagement_id = gate.engagement["id"]
+            with connect() as c:
+                cur = c.execute("INSERT INTO scans (engagement_id, target, report_enc) VALUES (?,?,?)",
+                                (ss.engagement_id, host, encrypt(original_report.model_dump_json())))
+                ss.scan_id = cur.lastrowid
 
 if ss.get("scan") and ss.get("profile"):
-    report = evaluate(ss.profile, ss.scan, ss.confirmed)
+    dismissed = review.dismissals(user["id"], ss.scan_id)
+    report = evaluate(ss.profile, ss.scan, ss.confirmed, {d["finding_id"] for d in dismissed})
     report.engagement_id = ss.engagement_id
     ss.report = report
 
@@ -368,6 +400,16 @@ if ss.get("scan") and ss.get("profile"):
                         st.rerun()
             else:
                 st.caption(f"🧠 {ex.get('generated_by')}{' · cached' if ex.get('cached') else ''}")
+            if f.source != "profile":
+                with st.form(f"dismiss_{ss.scan_id}_{where}_{f.id}"):
+                    reason = st.text_area(RT["reason"], max_chars=2000)
+                    if st.form_submit_button(RT["dismiss"]):
+                        try:
+                            review.dismiss(user["id"], ss.scan_id, f.id, reason)
+                        except ValueError as err:
+                            st.error(str(err))
+                        else:
+                            st.rerun()
 
     st.subheader(f"{T['findings']} ({len(report.findings)})")
     eu_on = any(a.applies for a in report.applicability if a.framework == "GDPR")
@@ -387,11 +429,23 @@ if ss.get("scan") and ss.get("profile"):
         for f in todos:
             render_finding(f, "todo")
 
+    if dismissed:
+        with st.expander(f"{RT['dismissed']} ({len(dismissed)})"):
+            st.caption(RT["note"])
+            for d in dismissed:
+                st.write(d["finding_id"])
+                st.write(d["reason"])
+                if st.button(RT["restore"], key=f"restore_{ss.scan_id}_{d['finding_id']}"):
+                    review.restore(user["id"], ss.scan_id, d["finding_id"])
+                    st.rerun()
+
     with st.expander(T["correct"]):
         real = st.text_input(T["real_host"], ss.confirmed.get("hosting_country", ""))
         if st.button(T["apply"]):
             ss.confirmed = {**ss.confirmed, "hosting_country": real.strip().upper()} if real.strip() else {}
             ss.explanations = {}
+            ss.ai_done = {}
+            ss.pop("privacy_draft", None)
             audit.log("fact_corrected", user["id"], ss.scan.target, ss.engagement_id, None, {"hosting_country": real})
             st.rerun()
 
@@ -428,19 +482,14 @@ if ss.get("scan") and ss.get("profile"):
     if ss.role == "legal" and st.button(T["draft"]):
         with st.spinner("…"):
             ss.setdefault("privacy_draft", {})[ss.lang] = draft = draft_privacy_notice(ss.profile, report.findings, ss.lang)
-    html = render_html(report, exps, ss.role, ss.lang, draft)
+    html = render_html(report, exps, ss.role, ss.lang, draft, dismissed)
     pdf = cached_pdf(html)
     fname = f"mutabiq_{report.engagement_id}_{ss.role}_{ss.lang}"
     c1, c2 = st.columns(2)
     if pdf:
         if c1.download_button(T["dl_pdf"], pdf, f"{fname}.pdf", "application/pdf"):
             audit.log("report_downloaded", user["id"], ss.scan.target, ss.engagement_id, None, {"role": ss.role, "lang": ss.lang})
-    c2.download_button(T["dl_html"], html, f"{fname}.html", "text/html")
-
-    # Encrypted copy of the result for the engagement record (retention handled per contract)
-    if not ss.get("saved_scan"):
-        with connect() as c:
-            c.execute("INSERT INTO scans (engagement_id, target, report_enc) VALUES (?,?,?)",
-                      (ss.engagement_id, ss.scan.target, encrypt(report.model_dump_json())))
-        ss.saved_scan = True
+    if c2.download_button(T["dl_html"], html, f"{fname}.html", "text/html"):
+        audit.log("report_downloaded", user["id"], ss.scan.target, ss.engagement_id,
+                  details={"role": ss.role, "lang": ss.lang, "format": "html"})
 

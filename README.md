@@ -68,6 +68,20 @@ login → engagement (contract) → company profile → gate (5 checks, audit-lo
 
 See `HANDOFF.md` for what is done and what is left.
 
+## Reviews, audit exports and retention
+
+Clients can download their company's audit events as JSON, including after a contract ends.
+Detected findings can be dismissed with a reason and restored. Reasons are encrypted and scoped
+to a saved scan; new scans are evaluated afresh. Reports explicitly disclose client-dismissed items.
+
+Scan results and dismissal reasons are removed 30 days after expiry or recorded revocation.
+Cleanup runs whenever the app reruns. For deletion while the app is closed, schedule
+`python scripts/cleanup.py` daily using Windows Task Scheduler or cron. Backups and exported
+reports need their own retention policy; this command does not manage them.
+
+Developer checks: `python -m pip install -r requirements-dev.txt`, then `python -m pytest -q`.
+See `docs/COMPLETION.md` for upgrade and demo acceptance steps.
+
 ## Team
 
 Built at Hacktoberfest 2026 (Track 3 — Open Governance & Public Impact) by:

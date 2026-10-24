@@ -98,9 +98,16 @@ def _call_ollama(messages: list[dict]) -> dict | None:
 def _valid(ans: dict | None, f: Finding, lang: str) -> bool:
     if not isinstance(ans, dict) or not {"summary", "why_it_matters", "what_to_do", "citations"} <= ans.keys():
         return False
-    if not isinstance(ans["what_to_do"], list) or not ans["what_to_do"]:
+    if not all(isinstance(ans[k], str) and ans[k].strip() for k in ("summary", "why_it_matters")):
         return False
-    ans["citations"] = [c for c in ans.get("citations", []) if c in f.refs] or f.refs
+    if not isinstance(ans["what_to_do"], list) or not 2 <= len(ans["what_to_do"]) <= 4:
+        return False
+    if not all(isinstance(step, str) and step.strip() for step in ans["what_to_do"]):
+        return False
+    if not isinstance(ans["citations"], list) or not ans["citations"]:
+        return False
+    if not all(isinstance(c, str) and c in f.refs for c in ans["citations"]):
+        return False
     text = " ".join([ans["summary"], ans["why_it_matters"], *map(str, ans["what_to_do"])])
     return _lang_ok(text, lang)
 
@@ -180,8 +187,9 @@ def ollama_status() -> dict:
     try:
         tags = requests.get(f"{OLLAMA}/api/tags", timeout=3).json()
         names = [m["name"] for m in tags.get("models", [])]
-        return {"up": True, "models": names, "llm_ready": any(MODEL.split(":")[0] in n for n in names),
-                "embed_ready": any("bge-m3" in n for n in names)}
+        model_name = MODEL if ":" in MODEL else f"{MODEL}:latest"
+        return {"up": True, "models": names, "llm_ready": model_name in names,
+                "embed_ready": any(n.split(":")[0] == "bge-m3" for n in names)}
     except Exception:  # noqa: BLE001
         return {"up": False, "models": [], "llm_ready": False, "embed_ready": False}
 

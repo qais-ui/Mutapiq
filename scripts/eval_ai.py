@@ -126,3 +126,4 @@ print(f"\n{passed}/{len(results)} checks passed · raw answers: {out}")
 for job in dict.fromkeys(r[0] for r in results):
     rs = [r for r in results if r[0] == job]
     print(f"  {job:8s} {sum(r[2] for r in rs)}/{len(rs)}")
+sys.exit(0 if passed == len(results) else 1)

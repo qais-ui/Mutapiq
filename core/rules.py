@@ -80,7 +80,8 @@ def applicability(p: CompanyProfile, hosting_country: str | None) -> list[Applic
 
 
 # ---------------------------------------------------------------- evaluation
-def evaluate(p: CompanyProfile, s: ScanResult, confirmed: dict | None = None) -> Report:
+def evaluate(p: CompanyProfile, s: ScanResult, confirmed: dict | None = None,
+             dismissed: set[str] | None = None) -> Report:
     """confirmed: facts the user corrected, e.g. {"hosting_country": "JO"} — they override detection."""
     confirmed = confirmed or {}
     R = load_rules()
@@ -202,6 +203,8 @@ def evaluate(p: CompanyProfile, s: ScanResult, confirmed: dict | None = None) ->
 
     sev_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     f.sort(key=lambda x: (sev_order[x.severity], x.id))
+    # Dismissals are scoped to one saved scan by core.review, not applied to future scans.
+    f = [x for x in f if x.source == "profile" or x.id not in (dismissed or set())]
     # Technical score: only detected issues count (profile obligations are to-dos, not failures).
     penalty = sum(SEV_WEIGHT[x.severity] for x in f if x.source != "profile")
     score = max(5, 100 - penalty // 2)

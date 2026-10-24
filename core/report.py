@@ -38,7 +38,8 @@ TEXT = {
 }
 
 
-def render_html(report: Report, explanations: dict[str, dict], role: str, lang: str, privacy_draft: str | None = None) -> str:
+def render_html(report: Report, explanations: dict[str, dict], role: str, lang: str,
+                privacy_draft: str | None = None, dismissals: list[dict] | None = None) -> str:
     t = {**TEXT[lang], "role_label": TEXT[lang]["roles"][role]}
     items = [{"f": f, "ex": explanations[f.id],
               "title": f.title_ar if lang == "ar" and f.title_ar else f.title,
@@ -46,6 +47,7 @@ def render_html(report: Report, explanations: dict[str, dict], role: str, lang: 
              for f in report.findings if f.id in explanations]
     return ENV.get_template("report.html").render(report=report, items=items, role=role, lang=lang, t=t,
                                                   privacy_draft=privacy_draft,
+                                                  dismissals=dismissals or [],
                                                   generated=dt.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
 
