@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+db/*.db
+db/.fernet.key
+db/contracts/
+data/index/
+data/cache/
+data/cloud_ranges/*.json
+data/laws/*.pdf
+db/demo_token.txt
+.req-win.txt
+.pytest_cache/
+data/laws/*.txt
+*.log

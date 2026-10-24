@@ -1,0 +1,440 @@
+{
+  "profile": {
+    "name": "Shifa Health",
+    "domain": "shifa-demo.onrender.com",
+    "sector": "health",
+    "is_critical_sector": false,
+    "is_government": false,
+    "data_types": [
+      "basic",
+      "health"
+    ],
+    "user_countries": [
+      "JO",
+      "DE"
+    ],
+    "hosting_country": "DE",
+    "expanding_to_eu": true,
+    "employees": 10,
+    "processing_is_core_activity": false
+  },
+  "applicability": [
+    {
+      "framework": "PDPL",
+      "applies": true,
+      "reason": "You process personal data of people in Jordan; Law No. 24 of 2023 applies to all such processing. You also process sensitive data (health).",
+      "reason_ar": "تعالجون بيانات شخصية لأشخاص في الأردن، وقانون حماية البيانات الشخصية رقم 24 لسنة 2023 ينطبق على هذه المعالجة. كما تعالجون بيانات حساسة.",
+      "confidence": "high"
+    },
+    {
+      "framework": "NCSC",
+      "applies": true,
+      "reason": "Your sector is government or one of the critical sectors in the NCSC framework's first phase.",
+      "reason_ar": "قطاعكم حكومي أو من القطاعات الحيوية المشمولة في المرحلة الأولى من الإطار الوطني للأمن السيبراني.",
+      "confidence": "medium"
+    },
+    {
+      "framework": "GDPR",
+      "applies": true,
+      "reason": "You serve users in the EU (DE).",
+      "reason_ar": "لديكم مستخدمون في الاتحاد الأوروبي (DE).",
+      "confidence": "high"
+    },
+    {
+      "framework": "ISO27001",
+      "applies": true,
+      "reason": "ISO 27001 is voluntary, but EU clients and critical-sector regulators commonly expect it.",
+      "reason_ar": "معيار ISO 27001 اختياري، لكن العملاء الأوروبيين والجهات الرقابية في القطاعات الحيوية يتوقعونه عادةً.",
+      "confidence": "low"
+    }
+  ],
+  "findings": [
+    {
+      "id": "FORM_OVER_HTTP",
+      "title": "A form submits personal data over unencrypted HTTP",
+      "title_ar": "نموذج يرسل بيانات شخصية عبر HTTP غير مشفر",
+      "severity": "critical",
+      "evidence": {
+        "forms": [
+          "http://127.0.0.1:5001/book"
+        ]
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:security_of_processing",
+        "GDPR:Art.32",
+        "ISO:A.8.24"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "NO_HTTPS",
+      "title": "Site is not served over HTTPS",
+      "title_ar": "الموقع لا يستخدم اتصالاً مشفراً (HTTPS)",
+      "severity": "critical",
+      "evidence": {
+        "note": "demo site served over plain HTTP"
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:security_of_processing",
+        "NCSC:web_application_security",
+        "GDPR:Art.32",
+        "ISO:A.8.24"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "COOKIE_BEFORE_CONSENT",
+      "title": "Tracking cookies are set before the visitor gives consent",
+      "title_ar": "يتم وضع ملفات تعريف ارتباط للتتبع قبل موافقة الزائر",
+      "severity": "high",
+      "evidence": {
+        "tracking_cookies": [
+          "_ga"
+        ],
+        "trackers_loaded_on_first_visit": [
+          "Google Tag Manager",
+          "Meta Pixel"
+        ]
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:consent",
+        "GDPR:Art.6",
+        "GDPR:Art.7",
+        "EPRIVACY:Art.5(3)",
+        "ISO:A.5.34"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "DATA_HOSTED_OUTSIDE_JO",
+      "title": "Personal data appears to be hosted outside Jordan",
+      "title_ar": "البيانات الشخصية مستضافة على ما يبدو خارج الأردن",
+      "severity": "high",
+      "evidence": {
+        "hosting_country": "DE",
+        "cloud": null,
+        "basis": "profile"
+      },
+      "source": "profile",
+      "jurisdictions": [
+        "JO"
+      ],
+      "refs": [
+        "PDPL:cross_border_transfer",
+        "PDPL:dpo",
+        "ISO:A.5.23"
+      ],
+      "fix_effort": "high"
+    },
+    {
+      "id": "DPO_REQUIRED",
+      "title": "A Data Protection Officer must be appointed",
+      "title_ar": "يجب تعيين مسؤول حماية بيانات",
+      "severity": "high",
+      "evidence": {
+        "sensitive": [
+          "health"
+        ],
+        "core_activity": false,
+        "transfers_abroad": true
+      },
+      "source": "profile",
+      "jurisdictions": [
+        "JO"
+      ],
+      "refs": [
+        "PDPL:dpo"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "NCSC_FRAMEWORK_APPLIES",
+      "title": "The NCSC National Cybersecurity Framework applies to you",
+      "title_ar": "الإطار الوطني للأمن السيبراني (المركز الوطني) ينطبق عليكم",
+      "severity": "high",
+      "evidence": {
+        "sector": "health"
+      },
+      "source": "profile",
+      "jurisdictions": [
+        "JO"
+      ],
+      "refs": [
+        "NCSC:scope",
+        "CYBERSECURITY_LAW:scope"
+      ],
+      "fix_effort": "high"
+    },
+    {
+      "id": "NO_PRIVACY_POLICY",
+      "title": "No privacy policy found",
+      "title_ar": "لا توجد سياسة خصوصية",
+      "severity": "high",
+      "evidence": {
+        "searched_on": "http://127.0.0.1:5001"
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:transparency",
+        "PDPL:data_subject_rights",
+        "GDPR:Art.13",
+        "ISO:A.5.34"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "THIRD_PARTY_TRACKERS",
+      "title": "Third-party trackers send visitor data to external companies",
+      "title_ar": "أدوات تتبع خارجية ترسل بيانات الزوار إلى جهات أخرى",
+      "severity": "high",
+      "evidence": {
+        "trackers": {
+          "googletagmanager.com": "Google Tag Manager",
+          "connect.facebook.net": "Meta Pixel"
+        },
+        "locations": []
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:cross_border_transfer",
+        "PDPL:consent",
+        "GDPR:Art.28",
+        "GDPR:Art.44",
+        "ISO:A.5.19"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "BREACH_PROCESS",
+      "title": "You need a data-breach notification process",
+      "title_ar": "يجب وجود إجراء للإبلاغ عن اختراق البيانات",
+      "severity": "medium",
+      "evidence": {},
+      "source": "profile",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:breach_notification",
+        "GDPR:Art.33",
+        "GDPR:Art.34",
+        "ISO:A.5.24"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "DPIA_REQUIRED",
+      "title": "A Data Protection Impact Assessment is likely required",
+      "title_ar": "من المرجح أنه يلزم إجراء تقييم أثر لحماية البيانات",
+      "severity": "medium",
+      "evidence": {
+        "sensitive": [
+          "health"
+        ]
+      },
+      "source": "profile",
+      "jurisdictions": [
+        "EU",
+        "JO"
+      ],
+      "refs": [
+        "GDPR:Art.35",
+        "PDPL:periodic_assessment"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "GDPR_DPO_REQUIRED",
+      "title": "A GDPR Data Protection Officer is likely required",
+      "title_ar": "من المرجح أنه يلزم تعيين مسؤول حماية بيانات وفق GDPR",
+      "severity": "medium",
+      "evidence": {
+        "sensitive": [
+          "health"
+        ]
+      },
+      "source": "profile",
+      "jurisdictions": [
+        "EU"
+      ],
+      "refs": [
+        "GDPR:Art.37"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "INSECURE_COOKIE_FLAGS",
+      "title": "Cookies missing Secure / HttpOnly / SameSite flags",
+      "title_ar": "ملفات تعريف الارتباط تفتقد خصائص Secure أو HttpOnly أو SameSite",
+      "severity": "medium",
+      "evidence": {
+        "cookies": [
+          "_ga",
+          "sessionid"
+        ]
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "NCSC:web_application_security",
+        "GDPR:Art.32",
+        "ISO:A.8.26"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "MISSING_CSP",
+      "title": "Content-Security-Policy header is missing",
+      "title_ar": "ترويسة سياسة أمان المحتوى (CSP) غير موجودة",
+      "severity": "medium",
+      "evidence": {
+        "header": "Content-Security-Policy"
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "NCSC:web_application_security",
+        "GDPR:Art.32",
+        "ISO:A.8.26"
+      ],
+      "fix_effort": "medium"
+    },
+    {
+      "id": "MISSING_HSTS",
+      "title": "Strict-Transport-Security (HSTS) header is missing",
+      "title_ar": "ترويسة HSTS غير موجودة",
+      "severity": "medium",
+      "evidence": {
+        "header": "Strict-Transport-Security"
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "NCSC:web_application_security",
+        "GDPR:Art.32",
+        "ISO:A.8.24"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "NO_CONSENT_BANNER",
+      "title": "No cookie/consent banner detected",
+      "title_ar": "لا توجد نافذة طلب موافقة على ملفات تعريف الارتباط",
+      "severity": "medium",
+      "evidence": {},
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:consent",
+        "GDPR:Art.7",
+        "EPRIVACY:Art.5(3)"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "FORM_COLLECTS_PII",
+      "title": "Forms collect personal data (name, email, phone, ID)",
+      "title_ar": "نماذج الموقع تجمع بيانات شخصية",
+      "severity": "low",
+      "evidence": {
+        "fields": [
+          "email",
+          "name",
+          "national_id",
+          "phone"
+        ]
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "PDPL:purpose_limitation",
+        "PDPL:consent",
+        "GDPR:Art.5",
+        "GDPR:Art.30"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "MISSING_XFO",
+      "title": "No clickjacking protection (X-Frame-Options / frame-ancestors)",
+      "title_ar": "لا توجد حماية من هجمات Clickjacking",
+      "severity": "low",
+      "evidence": {
+        "header": "X-Frame-Options"
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "NCSC:web_application_security",
+        "ISO:A.8.26"
+      ],
+      "fix_effort": "low"
+    },
+    {
+      "id": "SERVER_VERSION_DISCLOSED",
+      "title": "Server software version is disclosed in headers",
+      "title_ar": "إصدار برنامج الخادم مكشوف في الترويسات",
+      "severity": "low",
+      "evidence": {
+        "values": [
+          "Werkzeug/3.1.9 Python/3.13.17, nginx/1.18.0",
+          "Flask/2.3.2"
+        ]
+      },
+      "source": "detected",
+      "jurisdictions": [
+        "JO",
+        "EU"
+      ],
+      "refs": [
+        "NCSC:secure_configuration",
+        "ISO:A.8.9"
+      ],
+      "fix_effort": "low"
+    }
+  ],
+  "engagement_id": "ENG-2026-014",
+  "score": 54
+}

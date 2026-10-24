@@ -1,0 +1,27 @@
+{
+  "_note": "Arabic terms taken from Article 2 of Jordan's PDPL (Law No. 24 of 2023), checked 2026-10-24 against the Arabic text published at jordan-lawyer.com. Re-check against the Official Gazette before production. The model copies whatever is written here.",
+  "terms": {
+    "personal data": "البيانات الشخصية",
+    "sensitive personal data": "البيانات الشخصية الحساسة",
+    "data subject": "الشخص المعني",
+    "controller": "المسؤول",
+    "processor": "المعالج",
+    "recipient": "المتلقي",
+    "processing": "المعالجة",
+    "prior consent": "الموافقة المسبقة",
+    "profiling": "التشخيص",
+    "Data Protection Officer (DPO)": "المراقب",
+    "data breach (breach of data security and integrity)": "الإخلال بأمن وسلامة البيانات",
+    "Personal Data Protection Council": "المجلس",
+    "Personal Data Protection Unit (at MoDEE)": "الوحدة",
+    "cross-border transfer": "نقل البيانات إلى خارج المملكة",
+    "privacy notice": "إشعار الخصوصية",
+    "impact assessment (DPIA)": "تقييم الأثر على حماية البيانات",
+    "National Cyber Security Center (NCSC)": "المركز الوطني للأمن السيبراني",
+    "National Cybersecurity Framework": "الإطار الوطني للأمن السيبراني",
+    "critical sectors": "القطاعات الحيوية",
+    "encryption": "التشفير",
+    "Standard Contractual Clauses (SCCs)": "البنود التعاقدية القياسية"
+  },
+  "style_note_ar": "When writing for the business owner, after the first use of المراقب add (مسؤول حماية البيانات) in brackets, because owners know the general term."
+}

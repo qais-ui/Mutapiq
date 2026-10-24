@@ -1,0 +1,18 @@
+streamlit>=1.38
+pydantic>=2.6
+requests>=2.31
+dnspython>=2.6
+ipwhois>=1.2
+beautifulsoup4>=4.12
+pyyaml>=6.0
+jinja2>=3.1
+rank_bm25>=0.2.2
+cryptography>=42
+bcrypt>=4.1
+pymupdf>=1.24
+flask>=3.0
+gunicorn>=22.0
+# optional — real-browser cookie/tracker pass:   pip install playwright && playwright install chromium
+playwright>=1.45
+# optional — PDF export (needs Pango; on Windows use the HTML download + Print to PDF instead)
+weasyprint>=62

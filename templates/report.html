@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="{{ lang }}" dir="{{ 'rtl' if lang == 'ar' else 'ltr' }}">
+<head>
+<meta charset="utf-8">
+<title>{{ t.title }} — {{ report.profile.name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 18mm 16mm; @bottom-center { content: "{{ t.confidential }} · {{ report.engagement_id or '' }}"; font-size: 8pt; color: #888; } }
+  body { font-family: "IBM Plex Sans Arabic", "Segoe UI", sans-serif; color: #1d1d1f; font-size: 10.5pt; line-height: 1.6; }
+  h1 { font-size: 20pt; margin: 0 0 4px; } h2 { font-size: 13pt; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 22px; }
+  .meta { color: #666; font-size: 9pt; } .watermark { background: #f6f2e8; border: 1px solid #e5dcc4; padding: 6px 10px; font-size: 9pt; margin: 10px 0; }
+  .score { font-size: 28pt; font-weight: 600; } .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 8.5pt; font-weight: 600; }
+  .critical { background: #fde2e1; color: #8a1c17; } .high { background: #fdebd8; color: #8a4a0b; } .medium { background: #fdf6d3; color: #6d5a06; } .low { background: #e5f0fb; color: #12456e; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; } th, td { border-bottom: 1px solid #eee; padding: 5px 6px; text-align: start; vertical-align: top; }
+  .finding { border: 1px solid #e6e6e6; border-radius: 8px; padding: 10px 12px; margin: 10px 0; page-break-inside: avoid; }
+  .finding h3 { margin: 0 0 4px; font-size: 11pt; } .cite { color: #555; font-size: 8.5pt; } code, .ltr { direction: ltr; unicode-bidi: isolate; font-family: Consolas, monospace; font-size: 9pt; }
+  .disclaimer { margin-top: 24px; font-size: 8.5pt; color: #666; border-top: 1px solid #ddd; padding-top: 8px; }
+</style>
+</head>
+<body>
+<h1>{{ t.title }}</h1>
+<div class="meta">{{ report.profile.name }} · <span class="ltr">{{ report.profile.domain }}</span> · {{ generated }} · {{ t.role_label }}</div>
+<div class="watermark">{{ t.confidential }} — {{ t.prepared_for }} {{ report.profile.name }}{% if report.engagement_id %} · {{ t.under }} <span class="ltr">{{ report.engagement_id }}</span>{% endif %}</div>
+
+<h2>{{ t.summary }}</h2>
+<p><span class="score">{{ report.score }}/100</span> &nbsp; {{ t.score_note }}</p>
+<table>
+  <tr><th>{{ t.framework }}</th><th>{{ t.applies }}</th><th>{{ t.why }}</th></tr>
+  {% for a in report.applicability %}
+  <tr><td>{{ a.framework }}</td><td>{{ t.yes if a.applies else t.no }}</td><td>{{ a.reason_ar if lang == 'ar' and a.reason_ar else a.reason }}</td></tr>
+  {% endfor %}
+</table>
+
+{% if role == 'owner' %}
+<h2>{{ t.top_actions }}</h2>
+<ol>{% for item in items[:5] %}<li><b>{{ item.title }}</b> — {{ item.ex.what_to_do[0] }}</li>{% endfor %}</ol>
+{% endif %}
+
+<h2>{{ t.findings }} ({{ items|length }})</h2>
+{% for item in items %}
+<div class="finding">
+  <h3><span class="pill {{ item.f.severity }}">{{ t.sev[item.f.severity] }}</span> {{ item.title }}</h3>
+  <p>{{ item.ex.why_it_matters }}</p>
+  {% if role != 'owner' and item.f.evidence %}<p class="cite">{{ t.evidence }}: <code>{{ item.evidence_str }}</code> · {{ t.source }}: {{ t.src[item.f.source] }}</p>{% endif %}
+  <ul>{% for step in item.ex.what_to_do %}<li>{{ step }}</li>{% endfor %}</ul>
+  <div class="cite">{{ t.refs }}: {{ item.ex.citation_labels | join(' · ') }}</div>
+  {% if role == 'legal' %}{% for s in item.ex.sources[:2] %}<div class="cite">— {{ s.source }}{% if s.article %} {{ s.article }}{% endif %}: “{{ s.excerpt[:260] }}…”</div>{% endfor %}{% endif %}
+</div>
+{% endfor %}
+
+{% if role == 'legal' and privacy_draft %}
+<h2>{{ t.privacy_draft }}</h2>
+<pre style="white-space: pre-wrap; font-family: inherit;">{{ privacy_draft }}</pre>
+{% endif %}
+
+<div class="disclaimer">{{ t.disclaimer }}</div>
+</body>
+</html>

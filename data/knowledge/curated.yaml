@@ -1,0 +1,374 @@
+# Curated knowledge chunks, written in our own words (no copied copyrighted text).
+# They let RAG work before the official law PDFs are ingested, and they give each AUDIENCE
+# its own style:  plain = business owner, technical = developer, legal = DPO / lawyer.
+# When you ingest the official PDFs (python -m core.rag ingest), the real article text is
+# added beside these and the legal answers cite it. Keep each chunk short (2–5 sentences).
+#
+# fields: id, topic (matches a ref key in ref_map.yaml), audience, lang, text
+# PDPL notes cite article numbers verified against the official MoDEE English translation (2026-10-24).
+
+- id: pdpl-consent-plain-en
+  topic: PDPL:consent
+  audience: plain
+  lang: en
+  text: 'Jordan''s PDPL (Law No. 24 of 2023) requires prior consent before processing personal data, except in the
+    cases Article 6 lists (Art. 4(A)). Under Article 5, consent must be explicit and documented in writing or electronically,
+    state the purpose and duration, and be requested in clear, simple, non-misleading language. Tracking visitors
+    with analytics or ad cookies before they agree does not meet this.
+
+    '
+- id: pdpl-consent-plain-ar
+  topic: PDPL:consent
+  audience: plain
+  lang: ar
+  text: 'يشترط قانون حماية البيانات الشخصية رقم 24 لسنة 2023 الحصول على الموافقة المسبقة قبل معالجة البيانات الشخصية،
+    إلا في الحالات المستثناة في المادة 6 (المادة 4/أ). وبحسب المادة 5 يجب أن تكون الموافقة صريحة وموثقة كتابياً
+    أو إلكترونياً، وأن تحدد الغاية والمدة، وأن يكون طلبها واضحاً وبسيطاً وغير مضلل. وتتبّع الزوار بملفات الارتباط
+    قبل موافقتهم لا يحقق ذلك.
+
+    '
+- id: pdpl-dpo-plain-en
+  topic: PDPL:dpo
+  audience: plain
+  lang: en
+  text: 'Article 11(A) of Jordan''s PDPL requires the controller to appoint a Data Protection Officer (called "al-muraqib"
+    in the Arabic text) when: processing personal data is its primary activity; it processes sensitive data; it
+    processes data of persons lacking legal capacity such as children; the data includes financial information;
+    it transfers databases outside the Kingdom; or the Council designates another case.
+
+    '
+- id: pdpl-dpo-plain-ar
+  topic: PDPL:dpo
+  audience: plain
+  lang: ar
+  text: 'توجب المادة 11/أ من قانون حماية البيانات الشخصية على المسؤول تعيين مراقب (مسؤول حماية البيانات) في الحالات
+    التالية: إذا كانت معالجة البيانات الشخصية نشاطه الرئيسي، أو إذا عالج بيانات حساسة، أو بيانات أشخاص فاقدي الأهلية
+    كالأطفال، أو بيانات تتضمن معلومات مالية، أو إذا نقل قواعد بيانات إلى خارج المملكة، أو في أي حالة أخرى يحددها
+    المجلس.
+
+    '
+- id: pdpl-dpo-legal-en
+  topic: PDPL:dpo
+  audience: legal
+  lang: en
+  text: 'PDPL Art. 11(A)(1)–(6) lists the six cases requiring a DPO; Art. 11(B)(1)–(7) sets the DPO''s duties, including
+    (B)(2) regular evaluation and examination of databases, processing systems and security systems, with documented
+    results and follow-up on recommendations. The Unit keeps a registry of controllers, processors and DPOs (Art.
+    18(D)).
+
+    '
+- id: pdpl-transfer-plain-en
+  topic: PDPL:cross_border_transfer
+  audience: plain
+  lang: en
+  text: 'Article 15(A) of Jordan''s PDPL forbids transferring personal data to anyone outside the Kingdom whose
+    level of protection is lower than the law requires, unless an exception applies. The exceptions are judicial
+    cooperation, international crime-fighting cooperation, a patient''s medical data needed for treatment, epidemic
+    and public-health data, the data subject''s consent after being told protection is not adequate, and banking
+    transfers. Under 15(B) the controller must check the recipient''s protection level before transferring. Hosting
+    on foreign servers counts.
+
+    '
+- id: pdpl-transfer-plain-ar
+  topic: PDPL:cross_border_transfer
+  audience: plain
+  lang: ar
+  text: 'تمنع المادة 15/أ من قانون حماية البيانات الشخصية نقل البيانات إلى أي شخص خارج المملكة إذا كان مستوى الحماية
+    لديه أقل مما ينص عليه القانون، إلا في حالات مستثناة منها: التعاون القضائي، ومكافحة الجريمة، وتبادل البيانات
+    الطبية للمريض لغايات علاجه، وبيانات الأوبئة والصحة العامة، وموافقة الشخص المعني بعد إعلامه بعدم توفر الحماية
+    الكافية، والعمليات المصرفية. وتلزم المادة 15/ب المسؤول بالتحقق من مستوى الحماية لدى الجهة المستلمة قبل النقل.
+    واستضافة البيانات على خوادم خارجية تُعد نقلاً.
+
+    '
+- id: pdpl-transparency-plain-en
+  topic: PDPL:transparency
+  audience: plain
+  lang: en
+  text: 'Before processing, Article 9 requires the controller to inform the data subject, in writing or electronically,
+    of the data being processed, the purpose, how long it is kept, who the processors are, the security controls
+    used, and any profiling. A clear privacy notice in Arabic is the practical way to do this for a Jordanian audience.
+
+    '
+- id: pdpl-transparency-plain-ar
+  topic: PDPL:transparency
+  audience: plain
+  lang: ar
+  text: 'توجب المادة 9 على المسؤول قبل المعالجة إعلام الشخص المعني كتابياً أو إلكترونياً بالبيانات التي ستُعالج
+    والغاية منها ومدة الاحتفاظ بها والجهات التي ستعالجها وضوابط الحماية المستخدمة وأي عملية تشخيص. والطريقة العملية
+    لذلك سياسة خصوصية واضحة باللغة العربية.
+
+    '
+- id: pdpl-rights-plain-en
+  topic: PDPL:data_subject_rights
+  audience: plain
+  lang: en
+  text: 'Article 4(B) gives people the right to access their data, withdraw consent, correct or update it, restrict
+    processing, have it erased or concealed, object to processing and profiling, transfer a copy, and be told about
+    security breaches. Article 4(C) forbids penalising anyone for using these rights; Article 8 requires a complaints
+    procedure.
+
+    '
+- id: pdpl-rights-plain-ar
+  topic: PDPL:data_subject_rights
+  audience: plain
+  lang: ar
+  text: 'تمنح المادة 4/ب الشخص المعني حق الاطلاع على بياناته وسحب موافقته وتصحيحها أو تحديثها وتقييد معالجتها ومحوها
+    أو حجبها والاعتراض على المعالجة والتشخيص ونقل نسخة منها والعلم بأي إخلال بأمنها. وتمنع المادة 4/ج معاقبة أي
+    شخص بسبب ممارسة هذه الحقوق.
+
+    '
+- id: pdpl-purpose-plain-en
+  topic: PDPL:purpose_limitation
+  audience: plain
+  lang: en
+  text: 'Article 7 requires processing to have a legitimate purpose that matches the reason the data was collected,
+    use lawful means, keep data accurate, and protect confidentiality. Article 6(B) requires deleting data once
+    its purpose ends. A booking form that asks for a national ID number when a phone number is enough collects more
+    than it needs.
+
+    '
+- id: pdpl-security-plain-en
+  topic: PDPL:security_of_processing
+  audience: plain
+  lang: en
+  text: 'Article 8(B) requires the controller to take security, technical and organisational measures to protect
+    personal data from breaches, following the Council''s instructions; Article 13 makes data under processing confidential.
+    Encrypting data in transit with HTTPS is the most basic of these measures.
+
+    '
+- id: pdpl-security-plain-ar
+  topic: PDPL:security_of_processing
+  audience: plain
+  lang: ar
+  text: 'توجب المادة 8/ب على المسؤول اتخاذ التدابير الأمنية والفنية والتنظيمية لحماية البيانات الشخصية من أي إخلال
+    وفق تعليمات المجلس، وتنص المادة 13 على سرية البيانات قيد المعالجة. ويُعد تشفير البيانات أثناء نقلها باستخدام
+    HTTPS أبسط هذه التدابير.
+
+    '
+- id: pdpl-breach-plain-en
+  topic: PDPL:breach_notification
+  audience: plain
+  lang: en
+  text: 'Article 20(A) of Jordan''s PDPL: when a breach of data security is likely to cause serious harm, the controller
+    must notify affected people within 24 hours of discovering it, with the steps to limit the damage, and report
+    it to the Personal Data Protection Unit within 72 hours, including its source, how it happened and who is affected.
+
+    '
+- id: pdpl-breach-plain-ar
+  topic: PDPL:breach_notification
+  audience: plain
+  lang: ar
+  text: 'تنص المادة 20/أ على أنه عند حدوث إخلال بأمن وسلامة البيانات يُحتمل أن يسبب ضرراً جسيماً، يجب على المسؤول
+    إبلاغ الأشخاص المعنيين خلال 24 ساعة من اكتشافه مع الإجراءات اللازمة للحد من آثاره، وإبلاغ الوحدة خلال 72 ساعة
+    مع مصدره وطريقة حدوثه والمتأثرين به.
+
+    '
+- id: pdpl-penalties-plain-en
+  topic: PDPL:penalties
+  audience: plain
+  lang: en
+  text: 'After a warning and a deadline to fix a violation, the Council can suspend or revoke licences and impose
+    a daily fine of up to 500 JD, capped at 3% of the previous year''s annual revenue, and the Unit may publish
+    the violation (Art. 21). Criminal fines run from 1,000 to 10,000 JD, doubled for repeat offences (Art. 22).
+
+    '
+- id: pdpl-penalties-plain-ar
+  topic: PDPL:penalties
+  audience: plain
+  lang: ar
+  text: 'بعد الإنذار ومنح مهلة للتصويب، يجوز للمجلس وقف التراخيص أو إلغاؤها وفرض غرامة يومية تصل إلى 500 دينار بحد
+    أقصى 3% من الإيرادات السنوية للسنة السابقة، ويجوز للوحدة نشر المخالفة (المادة 21). أما الغرامة الجزائية فمن
+    1000 إلى 10000 دينار، وتُضاعف عند التكرار (المادة 22).
+
+    '
+- id: pdpl-assessment-plain-en
+  topic: PDPL:periodic_assessment
+  audience: plain
+  lang: en
+  text: 'Article 11(B)(2) makes the DPO responsible for regular evaluation of databases, processing systems and
+    security systems, with documented results. Scheduled assessments like this scan help show that evaluation is
+    happening.
+
+    '
+- id: pdpl-transition-plain-en
+  topic: PDPL:scope
+  audience: plain
+  lang: en
+  text: 'The PDPL applies to personal data collected or processed before it took effect too (Art. 3). Organisations
+    already handling data had one year from the law''s entry into force to comply (Art. 23), so the grace period
+    has ended.
+
+    '
+- id: ncsc-scope-plain-en
+  topic: NCSC:scope
+  audience: plain
+  lang: en
+  text: 'Jordan''s National Cyber Security Center launched the National Cybersecurity Framework in 2025 as a single
+    reference of controls and policies. Its first phase covered more than 100 national institutions and the second
+    phase adds about 50 more, focused on government and vital sectors. Other private companies are encouraged, not
+    yet required, to follow it.
+
+    '
+- id: ncsc-scope-plain-ar
+  topic: NCSC:scope
+  audience: plain
+  lang: ar
+  text: 'أطلق المركز الوطني للأمن السيبراني الإطار الوطني للأمن السيبراني عام 2025 مرجعاً موحداً للضوابط والسياسات.
+    شملت مرحلته الأولى أكثر من 100 مؤسسة وطنية وتضيف المرحلة الثانية نحو 50 مؤسسة، مع التركيز على الجهات الحكومية
+    والقطاعات الحيوية. أما الشركات الخاصة الأخرى فيُنصح لها باتباعه دون إلزام حالياً.
+
+    '
+- id: ncsc-web-tech-en
+  topic: NCSC:web_application_security
+  audience: technical
+  lang: en
+  text: 'Web application controls usually require encrypted transport only (HTTPS with HTTP redirected), hardened
+    response headers (HSTS, Content-Security-Policy, X-Frame-Options or frame-ancestors, X-Content-Type-Options),
+    secure session cookies (Secure, HttpOnly, SameSite) and no disclosure of software versions.
+
+    '
+- id: tech-hsts
+  topic: NCSC:web_application_security
+  audience: technical
+  lang: en
+  text: 'Fix missing HSTS: return `Strict-Transport-Security: max-age=31536000; includeSubDomains` on every HTTPS
+    response. In nginx: `add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;`. Start
+    with a short max-age, confirm all subdomains serve HTTPS, then raise it.
+
+    '
+- id: tech-csp
+  topic: NCSC:web_application_security
+  audience: technical
+  lang: en
+  text: 'Fix missing CSP: start in report-only mode with `Content-Security-Policy-Report-Only: default-src ''self''`,
+    list the third-party domains you really need, then enforce. Add `frame-ancestors ''self''` to block clickjacking.
+
+    '
+- id: tech-cookies
+  topic: GDPR:Art.32
+  audience: technical
+  lang: en
+  text: 'Session cookies must be set with `Secure; HttpOnly; SameSite=Lax` (or Strict). In Flask: `SESSION_COOKIE_SECURE=True`,
+    `SESSION_COOKIE_HTTPONLY=True`, `SESSION_COOKIE_SAMESITE=''Lax''`.
+
+    '
+- id: tech-consent
+  topic: EPRIVACY:Art.5(3)
+  audience: technical
+  lang: en
+  text: 'Load analytics and ad scripts only after opt-in. Use a consent manager (for example the open-source Klaro
+    or CookieConsent) and Google Consent Mode with `ad_storage` and `analytics_storage` set to `denied` by default;
+    fire the tags only when the visitor accepts.
+
+    '
+- id: tech-email
+  topic: NCSC:email_security
+  audience: technical
+  lang: en
+  text: 'Publish SPF (`v=spf1 include:_spf.google.com -all`, adjusted to your mail provider) and DMARC (`_dmarc`
+    TXT `v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain`). Move DMARC to `p=reject` once reports are clean.
+
+    '
+- id: tech-tls
+  topic: NCSC:cryptography
+  audience: technical
+  lang: en
+  text: 'Disable TLS 1.0 and 1.1; allow TLS 1.2 and 1.3 only. In nginx: `ssl_protocols TLSv1.2 TLSv1.3;`. Automate
+    certificate renewal (for example certbot or your cloud''s managed certificates) to avoid expiry.
+
+    '
+- id: tech-server-header
+  topic: NCSC:secure_configuration
+  audience: technical
+  lang: en
+  text: 'Hide version banners: nginx `server_tokens off;`, remove `X-Powered-By` in your framework or reverse proxy.
+
+    '
+- id: gdpr-scope-plain-en
+  topic: GDPR:Art.3
+  audience: plain
+  lang: en
+  text: 'GDPR applies to a company outside the EU when it offers goods or services to people in the EU or monitors
+    their behaviour there. A Jordanian app with users in Germany is covered.
+
+    '
+- id: gdpr-transfer-plain-en
+  topic: GDPR:Art.44
+  audience: plain
+  lang: en
+  text: 'Personal data of people in the EU may leave the EU only under GDPR''s transfer rules. Jordan has no EU
+    adequacy decision, so transfers to Jordan usually need safeguards such as the EU Standard Contractual Clauses.
+
+    '
+- id: gdpr-sccs-legal-en
+  topic: GDPR:Art.46
+  audience: legal
+  lang: en
+  text: 'Without an adequacy decision, transfers may rely on appropriate safeguards, most often the European Commission''s
+    Standard Contractual Clauses, together with a transfer impact assessment.
+
+    '
+- id: gdpr-rep-plain-en
+  topic: GDPR:Art.27
+  audience: plain
+  lang: en
+  text: 'A company outside the EU that is covered by GDPR usually has to name a representative in an EU country
+    where its users are, unless its processing is occasional and low-risk.
+
+    '
+- id: gdpr-dpo-plain-en
+  topic: GDPR:Art.37
+  audience: plain
+  lang: en
+  text: 'GDPR requires a DPO when core activities involve large-scale processing of special categories of data,
+    such as health data, or large-scale regular monitoring of people.
+
+    '
+- id: gdpr-dpia-plain-en
+  topic: GDPR:Art.35
+  audience: plain
+  lang: en
+  text: 'A Data Protection Impact Assessment is required before high-risk processing, such as large-scale processing
+    of health data. It records the risks and the measures that reduce them.
+
+    '
+- id: gdpr-breach-plain-en
+  topic: GDPR:Art.33
+  audience: plain
+  lang: en
+  text: 'Under GDPR a personal data breach must be reported to the supervisory authority within 72 hours of becoming
+    aware of it, unless it is unlikely to risk people''s rights.
+
+    '
+- id: gdpr-info-plain-en
+  topic: GDPR:Art.13
+  audience: plain
+  lang: en
+  text: 'When you collect data you must tell people who you are, why you process the data, the legal basis, who
+    receives it, any transfer outside the EU, how long you keep it, and their rights.
+
+    '
+- id: gdpr-consent-plain-en
+  topic: GDPR:Art.7
+  audience: plain
+  lang: en
+  text: 'Valid consent must be freely given, specific, informed and unambiguous, and it must be as easy to withdraw
+    as to give. Pre-ticked boxes or tracking before a choice is made are not consent.
+
+    '
+- id: gdpr-security-plain-en
+  topic: GDPR:Art.32
+  audience: plain
+  lang: en
+  text: 'GDPR requires security appropriate to the risk, including encryption where appropriate, and regular testing
+    of how well the measures work.
+
+    '
+- id: iso-overview-plain-en
+  topic: ISO:A.5.34
+  audience: plain
+  lang: en
+  text: 'ISO/IEC 27001 is a voluntary international standard for information security management. Its Annex A lists
+    controls, such as privacy and protection of personal information, that auditors check before certifying you.
+
+    '

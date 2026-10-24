@@ -1,0 +1,116 @@
+# Human-readable labels for every ref used in rules.yaml.
+# PDPL article numbers VERIFIED on 2026-10-24 against the official English translation published by MoDEE:
+# https://www.modee.gov.jo/EBV4.0/Root_Storage/EN/1/PDP_Law_-_English_Version-_officail_translation.pdf
+# NCSC framework control numbers are NOT public — they stay null and show as "control to be confirmed".
+# article: the verified article number, or null if NOBODY has checked the official text yet.
+# The UI shows "article to be confirmed" when article is null. Fill these in from the official PDPL / NCSC PDFs.
+# query: what the RAG searches for to find the right article text.
+
+PDPL:dpo:
+  label: "Jordan PDPL — Data Protection Officer"
+  label_ar: "قانون حماية البيانات الشخصية — تعيين المراقب (مسؤول حماية البيانات)"
+  article: "Art. 11(A)"        # official MoDEE English translation: Art. 11(A)(1)–(6)
+  query: "data protection officer appoint controller sensitive transfer outside Kingdom المراقب تعيين"
+PDPL:periodic_assessment:
+  label: "Jordan PDPL — periodic assessment of data systems"
+  label_ar: "قانون حماية البيانات الشخصية — التقييم الدوري لأنظمة المعالجة"
+  article: "Art. 11(B)(2)"        # official translation
+  query: "periodic assessment evaluation database processing systems security تقييم دوري"
+PDPL:consent:
+  label: "Jordan PDPL — consent"
+  label_ar: "قانون حماية البيانات الشخصية — الموافقة"
+  article: "Art. 4(A), Art. 5"        # official translation
+  query: "consent data subject prior explicit processing موافقة الشخص المعني"
+PDPL:transparency:
+  label: "Jordan PDPL — informing the data subject"
+  label_ar: "قانون حماية البيانات الشخصية — إعلام الشخص المعني"
+  article: "Art. 9"        # official translation
+  query: "inform data subject purpose controller identity إعلام الشخص المعني"
+PDPL:data_subject_rights:
+  label: "Jordan PDPL — data subject rights"
+  label_ar: "قانون حماية البيانات الشخصية — حقوق الشخص المعني"
+  article: "Art. 4(B)"        # official translation
+  query: "right access correct erase object withdraw consent portability حقوق الشخص المعني"
+PDPL:purpose_limitation:
+  label: "Jordan PDPL — lawful, specified purpose"
+  label_ar: "قانون حماية البيانات الشخصية — تحديد الغاية المشروعة"
+  article: "Art. 7"        # official translation
+  query: "specific lawful purpose limitation processing غاية مشروعة محددة"
+PDPL:security_of_processing:
+  label: "Jordan PDPL — security of processing"
+  label_ar: "قانون حماية البيانات الشخصية — أمن المعالجة"
+  article: "Art. 8(B)"        # official translation
+  query: "technical organizational measures protect data security safeguards تدابير فنية وتنظيمية"
+PDPL:cross_border_transfer:
+  label: "Jordan PDPL — transfer of data outside Jordan"
+  label_ar: "قانون حماية البيانات الشخصية — نقل البيانات خارج المملكة"
+  article: "Art. 15"        # official translation
+  query: "transfer personal data outside Jordan level of protection نقل البيانات خارج المملكة"
+PDPL:penalties:
+  label: "Jordan PDPL — administrative and criminal penalties"
+  label_ar: "قانون حماية البيانات الشخصية — العقوبات الإدارية والجزائية"
+  article: "Art. 21–22"        # official translation
+  query: "penalties fine daily 500 dinars 3% revenue criminal fine 1000 10000 العقوبات غرامة"
+PDPL:breach_notification:
+  label: "Jordan PDPL — breach notification"
+  label_ar: "قانون حماية البيانات الشخصية — الإخلال بأمن وسلامة البيانات والإبلاغ عنه"
+  article: "Art. 20(A)"        # official translation
+  query: "breach security integrity notify 24 hours 72 hours unit data subject الإخلال بأمن وسلامة البيانات"
+
+NCSC:scope:
+  label: "NCSC National Cybersecurity Framework — scope (government & critical sectors)"
+  label_ar: "الإطار الوطني للأمن السيبراني — نطاق التطبيق"
+  article: null
+  query: "scope applicability critical sectors government entities نطاق القطاعات الحيوية"
+NCSC:web_application_security:
+  label: "NCSC framework — web application security controls"
+  label_ar: "الإطار الوطني — ضوابط أمن تطبيقات الويب"
+  article: null
+  query: "web application security secure configuration HTTPS أمن تطبيقات الويب"
+NCSC:cryptography:
+  label: "NCSC framework — cryptography controls"
+  label_ar: "الإطار الوطني — ضوابط التشفير"
+  article: null
+  query: "cryptography encryption TLS certificates التشفير"
+NCSC:secure_configuration:
+  label: "NCSC framework — secure configuration / hardening"
+  label_ar: "الإطار الوطني — الإعدادات الآمنة"
+  article: null
+  query: "hardening secure configuration baseline الإعدادات الآمنة"
+NCSC:email_security:
+  label: "NCSC framework — email security"
+  label_ar: "الإطار الوطني — أمن البريد الإلكتروني"
+  article: null
+  query: "email security spoofing phishing SPF DMARC أمن البريد الإلكتروني"
+CYBERSECURITY_LAW:scope:
+  label: "Cybersecurity Law No. 16 of 2019"
+  label_ar: "قانون الأمن السيبراني رقم 16 لسنة 2019"
+  article: null
+  query: "cybersecurity law national center obligations قانون الأمن السيبراني"
+
+GDPR:Art.3:   {label: "GDPR Art. 3 — territorial scope", label_ar: "اللائحة الأوروبية GDPR المادة 3 — النطاق الإقليمي", article: "Art. 3(2)", query: "territorial scope offering goods services monitoring behaviour data subjects in the Union"}
+GDPR:Art.5:   {label: "GDPR Art. 5 — principles", label_ar: "GDPR المادة 5 — مبادئ المعالجة", article: "Art. 5", query: "principles lawfulness fairness transparency purpose limitation data minimisation"}
+GDPR:Art.6:   {label: "GDPR Art. 6 — lawful basis", label_ar: "GDPR المادة 6 — الأساس القانوني", article: "Art. 6", query: "lawfulness of processing consent legitimate interest"}
+GDPR:Art.7:   {label: "GDPR Art. 7 — conditions for consent", label_ar: "GDPR المادة 7 — شروط الموافقة", article: "Art. 7", query: "conditions for consent demonstrate withdraw"}
+GDPR:Art.13:  {label: "GDPR Art. 13 — information to data subjects", label_ar: "GDPR المادة 13 — المعلومات المقدمة للأفراد", article: "Art. 13", query: "information to be provided where personal data are collected from the data subject"}
+GDPR:Art.27:  {label: "GDPR Art. 27 — EU representative", label_ar: "GDPR المادة 27 — الممثل في الاتحاد الأوروبي", article: "Art. 27", query: "representatives of controllers not established in the Union"}
+GDPR:Art.28:  {label: "GDPR Art. 28 — processors", label_ar: "GDPR المادة 28 — المعالِجون", article: "Art. 28", query: "processor contract sufficient guarantees"}
+GDPR:Art.30:  {label: "GDPR Art. 30 — records of processing", label_ar: "GDPR المادة 30 — سجلات المعالجة", article: "Art. 30", query: "records of processing activities"}
+GDPR:Art.32:  {label: "GDPR Art. 32 — security of processing", label_ar: "GDPR المادة 32 — أمن المعالجة", article: "Art. 32", query: "security of processing encryption confidentiality integrity"}
+GDPR:Art.33:  {label: "GDPR Art. 33 — breach notification to authority", label_ar: "GDPR المادة 33 — الإبلاغ عن الاختراق للسلطة", article: "Art. 33", query: "notification of a personal data breach to the supervisory authority 72 hours"}
+GDPR:Art.34:  {label: "GDPR Art. 34 — breach communication to individuals", label_ar: "GDPR المادة 34 — إبلاغ الأفراد بالاختراق", article: "Art. 34", query: "communication of a personal data breach to the data subject"}
+GDPR:Art.35:  {label: "GDPR Art. 35 — impact assessment (DPIA)", label_ar: "GDPR المادة 35 — تقييم الأثر", article: "Art. 35", query: "data protection impact assessment high risk special categories large scale"}
+GDPR:Art.37:  {label: "GDPR Art. 37 — designation of a DPO", label_ar: "GDPR المادة 37 — تعيين مسؤول حماية البيانات", article: "Art. 37", query: "designation of the data protection officer core activities large scale special categories"}
+GDPR:Art.44:  {label: "GDPR Art. 44 — transfers to third countries", label_ar: "GDPR المادة 44 — النقل إلى دول ثالثة", article: "Art. 44", query: "general principle for transfers third country"}
+GDPR:Art.46:  {label: "GDPR Art. 46 — appropriate safeguards (SCCs)", label_ar: "GDPR المادة 46 — الضمانات المناسبة", article: "Art. 46", query: "transfers subject to appropriate safeguards standard contractual clauses"}
+EPRIVACY:Art.5(3): {label: "ePrivacy Directive Art. 5(3) — cookies", label_ar: "توجيه الخصوصية الإلكترونية المادة 5(3) — ملفات الارتباط", article: "Art. 5(3)", query: "storing information terminal equipment cookies consent"}
+
+# ISO/IEC 27001:2022 Annex A — control IDs and titles only (the standard text is copyrighted).
+ISO:A.5.19:  {label: "ISO 27001 A.5.19 — Information security in supplier relationships", label_ar: "ISO 27001 A.5.19 — أمن المعلومات في علاقات الموردين", article: "A.5.19", query: "supplier relationships"}
+ISO:A.5.23:  {label: "ISO 27001 A.5.23 — Information security for use of cloud services", label_ar: "ISO 27001 A.5.23 — أمن استخدام الخدمات السحابية", article: "A.5.23", query: "cloud services"}
+ISO:A.5.24:  {label: "ISO 27001 A.5.24 — Incident management planning and preparation", label_ar: "ISO 27001 A.5.24 — التخطيط لإدارة الحوادث", article: "A.5.24", query: "incident management"}
+ISO:A.5.34:  {label: "ISO 27001 A.5.34 — Privacy and protection of PII", label_ar: "ISO 27001 A.5.34 — الخصوصية وحماية البيانات الشخصية", article: "A.5.34", query: "privacy PII"}
+ISO:A.8.9:   {label: "ISO 27001 A.8.9 — Configuration management", label_ar: "ISO 27001 A.8.9 — إدارة الإعدادات", article: "A.8.9", query: "configuration management"}
+ISO:A.8.20:  {label: "ISO 27001 A.8.20 — Networks security", label_ar: "ISO 27001 A.8.20 — أمن الشبكات", article: "A.8.20", query: "networks security"}
+ISO:A.8.24:  {label: "ISO 27001 A.8.24 — Use of cryptography", label_ar: "ISO 27001 A.8.24 — استخدام التشفير", article: "A.8.24", query: "cryptography"}
+ISO:A.8.26:  {label: "ISO 27001 A.8.26 — Application security requirements", label_ar: "ISO 27001 A.8.26 — متطلبات أمن التطبيقات", article: "A.8.26", query: "application security"}

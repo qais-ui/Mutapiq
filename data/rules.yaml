@@ -1,0 +1,246 @@
+# Mutabiq rule metadata — owned by the security engine (Ahmad).
+#
+# refs use TOPIC KEYS, not guessed article numbers:
+#   "PDPL:<topic>"  "NCSC:<topic>"  "GDPR:Art.N"  "ISO:A.x.y"  "EPRIVACY:Art.5(3)"
+# The RAG layer looks up the real article text by topic, and data/ref_map.yaml
+# maps a topic key to the verified article number once someone checks the official text.
+# NEVER put an article number in ref_map.yaml that nobody has checked in the official law.
+
+# The official NCSC list of critical sectors is not published. The user's answer ("we are in a critical sector")
+# decides; these sectors only trigger "possibly applies — confirm with NCSC". Energy is confirmed as covered
+# by the NCSC–JEPCO MoU (Al Mamlaka, 28 June 2026); the rest are common critical-infrastructure sectors.
+likely_critical_sectors: [government, finance, telecom, energy, water, health, transport]
+
+# PDPL Art. 2 "Sensitive Personal Data": origin/ethnicity, political opinions, religious beliefs, financial position,
+# physical/mental/genetic health, biometric data, criminal records (official MoDEE translation).
+sensitive_data_types: [health, genetic, biometric, financial, criminal, religion, political, ethnicity]
+# PDPL Art. 11(A) — a DPO (المراقب) is required for: core activity is processing, sensitive data, data of persons
+# lacking legal capacity (children), financial data, transfer of databases outside the Kingdom.
+dpo_trigger_data_types: [health, genetic, biometric, financial, criminal, religion, political, ethnicity, children]
+
+eu_countries: [AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE, IS, LI, NO]
+
+findings:
+  NO_HTTPS:
+    title: "Site is not served over HTTPS"
+    title_ar: "الموقع لا يستخدم اتصالاً مشفراً (HTTPS)"
+    severity: critical
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:security_of_processing", "NCSC:web_application_security", "GDPR:Art.32", "ISO:A.8.24"]
+
+  HTTP_NOT_REDIRECTED:
+    title: "HTTP traffic is not redirected to HTTPS"
+    title_ar: "حركة HTTP غير محوّلة إلى HTTPS"
+    severity: high
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:security_of_processing", "NCSC:web_application_security", "GDPR:Art.32", "ISO:A.8.24"]
+
+  MISSING_HSTS:
+    title: "Strict-Transport-Security (HSTS) header is missing"
+    title_ar: "ترويسة HSTS غير موجودة"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:web_application_security", "GDPR:Art.32", "ISO:A.8.24"]
+
+  MISSING_CSP:
+    title: "Content-Security-Policy header is missing"
+    title_ar: "ترويسة سياسة أمان المحتوى (CSP) غير موجودة"
+    severity: medium
+    effort: medium
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:web_application_security", "GDPR:Art.32", "ISO:A.8.26"]
+
+  MISSING_XFO:
+    title: "No clickjacking protection (X-Frame-Options / frame-ancestors)"
+    title_ar: "لا توجد حماية من هجمات Clickjacking"
+    severity: low
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:web_application_security", "ISO:A.8.26"]
+
+  SERVER_VERSION_DISCLOSED:
+    title: "Server software version is disclosed in headers"
+    title_ar: "إصدار برنامج الخادم مكشوف في الترويسات"
+    severity: low
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:secure_configuration", "ISO:A.8.9"]
+
+  WEAK_TLS:
+    title: "Outdated TLS version is accepted"
+    title_ar: "الخادم يقبل إصداراً قديماً من بروتوكول TLS"
+    severity: high
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:security_of_processing", "NCSC:cryptography", "GDPR:Art.32", "ISO:A.8.24"]
+
+  CERT_EXPIRING:
+    title: "TLS certificate expires within 21 days"
+    title_ar: "شهادة TLS تنتهي خلال 21 يوماً"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:cryptography", "ISO:A.8.24"]
+
+  COOKIE_BEFORE_CONSENT:
+    title: "Tracking cookies are set before the visitor gives consent"
+    title_ar: "يتم وضع ملفات تعريف ارتباط للتتبع قبل موافقة الزائر"
+    severity: high
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:consent", "GDPR:Art.6", "GDPR:Art.7", "EPRIVACY:Art.5(3)", "ISO:A.5.34"]
+
+  INSECURE_COOKIE_FLAGS:
+    title: "Cookies missing Secure / HttpOnly / SameSite flags"
+    title_ar: "ملفات تعريف الارتباط تفتقد خصائص Secure أو HttpOnly أو SameSite"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:web_application_security", "GDPR:Art.32", "ISO:A.8.26"]
+
+  THIRD_PARTY_TRACKERS:
+    title: "Third-party trackers send visitor data to external companies"
+    title_ar: "أدوات تتبع خارجية ترسل بيانات الزوار إلى جهات أخرى"
+    severity: high
+    effort: medium
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:cross_border_transfer", "PDPL:consent", "GDPR:Art.28", "GDPR:Art.44", "ISO:A.5.19"]
+
+  NO_CONSENT_BANNER:
+    title: "No cookie/consent banner detected"
+    title_ar: "لا توجد نافذة طلب موافقة على ملفات تعريف الارتباط"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:consent", "GDPR:Art.7", "EPRIVACY:Art.5(3)"]
+
+  NO_PRIVACY_POLICY:
+    title: "No privacy policy found"
+    title_ar: "لا توجد سياسة خصوصية"
+    severity: high
+    effort: medium
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:transparency", "PDPL:data_subject_rights", "GDPR:Art.13", "ISO:A.5.34"]
+
+  PRIVACY_POLICY_INCOMPLETE:
+    title: "Privacy policy is missing required information"
+    title_ar: "سياسة الخصوصية تفتقد معلومات مطلوبة"
+    severity: high
+    effort: medium
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:transparency", "PDPL:data_subject_rights", "GDPR:Art.13"]
+
+  NO_ARABIC_PRIVACY_NOTICE:
+    title: "Privacy policy is not available in Arabic"
+    title_ar: "سياسة الخصوصية غير متوفرة باللغة العربية"
+    severity: medium
+    effort: low
+    jurisdictions: [JO]
+    refs: ["PDPL:transparency"]
+
+  FORM_OVER_HTTP:
+    title: "A form submits personal data over unencrypted HTTP"
+    title_ar: "نموذج يرسل بيانات شخصية عبر HTTP غير مشفر"
+    severity: critical
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:security_of_processing", "GDPR:Art.32", "ISO:A.8.24"]
+
+  FORM_COLLECTS_PII:
+    title: "Forms collect personal data (name, email, phone, ID)"
+    title_ar: "نماذج الموقع تجمع بيانات شخصية"
+    severity: low
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:purpose_limitation", "PDPL:consent", "GDPR:Art.5", "GDPR:Art.30"]
+
+  DATA_HOSTED_OUTSIDE_JO:
+    title: "Personal data appears to be hosted outside Jordan"
+    title_ar: "البيانات الشخصية مستضافة على ما يبدو خارج الأردن"
+    severity: high
+    effort: high
+    jurisdictions: [JO]
+    refs: ["PDPL:cross_border_transfer", "PDPL:dpo", "ISO:A.5.23"]
+
+  ORIGIN_HIDDEN_BY_CDN:
+    title: "Real hosting location hidden behind a CDN — confirm it"
+    title_ar: "موقع الاستضافة الحقيقي مخفي خلف شبكة CDN — يرجى التأكيد"
+    severity: low
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:cross_border_transfer", "ISO:A.5.23"]
+
+  EU_TRANSFER_TO_JORDAN:
+    title: "EU users' data is processed outside the EU (no adequacy decision for Jordan)"
+    title_ar: "بيانات مستخدمين أوروبيين تُعالج خارج الاتحاد الأوروبي"
+    severity: high
+    effort: high
+    jurisdictions: [EU]
+    refs: ["GDPR:Art.3", "GDPR:Art.44", "GDPR:Art.46"]
+
+  EU_REPRESENTATIVE_REQUIRED:
+    title: "An EU representative may be required"
+    title_ar: "قد يلزم تعيين ممثل داخل الاتحاد الأوروبي"
+    severity: medium
+    effort: medium
+    jurisdictions: [EU]
+    refs: ["GDPR:Art.27"]
+
+  NO_SPF:
+    title: "No SPF record — domain can be spoofed in email"
+    title_ar: "لا يوجد سجل SPF — يمكن انتحال النطاق في البريد"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:email_security", "ISO:A.8.20"]
+
+  NO_DMARC:
+    title: "No DMARC record — phishing using your domain is not blocked"
+    title_ar: "لا يوجد سجل DMARC — لا يتم منع التصيد باسم نطاقك"
+    severity: medium
+    effort: low
+    jurisdictions: [JO, EU]
+    refs: ["NCSC:email_security", "ISO:A.8.20"]
+
+  DPO_REQUIRED:
+    title: "A Data Protection Officer must be appointed"
+    title_ar: "يجب تعيين مراقب لحماية البيانات (مسؤول حماية البيانات)"
+    severity: high
+    effort: medium
+    jurisdictions: [JO]
+    refs: ["PDPL:dpo"]
+
+  GDPR_DPO_REQUIRED:
+    title: "A GDPR Data Protection Officer is likely required"
+    title_ar: "من المرجح أنه يلزم تعيين مسؤول حماية بيانات وفق GDPR"
+    severity: medium
+    effort: medium
+    jurisdictions: [EU]
+    refs: ["GDPR:Art.37"]
+
+  DPIA_REQUIRED:
+    title: "A Data Protection Impact Assessment is likely required"
+    title_ar: "من المرجح أنه يلزم إجراء تقييم أثر لحماية البيانات"
+    severity: medium
+    effort: medium
+    jurisdictions: [EU, JO]
+    refs: ["GDPR:Art.35", "PDPL:periodic_assessment"]
+
+  NCSC_FRAMEWORK_APPLIES:
+    title: "The NCSC National Cybersecurity Framework applies to you"
+    title_ar: "الإطار الوطني للأمن السيبراني (المركز الوطني) ينطبق عليكم"
+    severity: high
+    effort: high
+    jurisdictions: [JO]
+    refs: ["NCSC:scope", "CYBERSECURITY_LAW:scope"]
+
+  BREACH_PROCESS:
+    title: "You need a breach process: tell people within 24h and the regulator within 72h"
+    title_ar: "يلزم إجراء للإبلاغ عن الإخلال بأمن البيانات: الأفراد خلال 24 ساعة والوحدة خلال 72 ساعة"
+    severity: medium
+    effort: medium
+    jurisdictions: [JO, EU]
+    refs: ["PDPL:breach_notification", "PDPL:penalties", "GDPR:Art.33", "GDPR:Art.34", "ISO:A.5.24"]

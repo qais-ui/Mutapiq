@@ -1,0 +1,77 @@
+{
+  "target": "127.0.0.1",
+  "final_url": "http://127.0.0.1:5001",
+  "https": {
+    "https_ok": false,
+    "http_redirects_to_https": false,
+    "final_url": "http://127.0.0.1:5001",
+    "local_test": true
+  },
+  "headers": {
+    "hsts": null,
+    "csp": null,
+    "x_frame_options": null,
+    "frame_ancestors": false,
+    "x_content_type_options": null,
+    "referrer_policy": null,
+    "server": "Werkzeug/3.1.9 Python/3.13.17, nginx/1.18.0",
+    "x_powered_by": "Flask/2.3.2",
+    "raw": {
+      "Server": "Werkzeug/3.1.9 Python/3.13.17, nginx/1.18.0",
+      "Date": "Sat, 24 Oct 2026 08:20:56 GMT",
+      "Content-Type": "text/html; charset=utf-8",
+      "Content-Length": "1197",
+      "Set-Cookie": "_ga=GA1.1.123456789.1729760000; Path=/, sessionid=demo-session-abc123; Path=/",
+      "X-Powered-By": "Flask/2.3.2",
+      "Connection": "close"
+    }
+  },
+  "tls": {},
+  "cookies": [
+    {
+      "name": "_ga",
+      "domain": "127.0.0.1",
+      "secure": false,
+      "httponly": false,
+      "samesite": null,
+      "tracking": true
+    },
+    {
+      "name": "sessionid",
+      "domain": "127.0.0.1",
+      "secure": false,
+      "httponly": false,
+      "samesite": null,
+      "tracking": false
+    }
+  ],
+  "third_party_scripts": [
+    "connect.facebook.net",
+    "www.googletagmanager.com"
+  ],
+  "consent_banner": false,
+  "privacy_policy": {
+    "found": false,
+    "page_is_arabic": false
+  },
+  "forms": [
+    {
+      "action": "http://127.0.0.1:5001/book",
+      "method": "post",
+      "over_http": true,
+      "pii_fields": [
+        "email",
+        "name",
+        "national_id",
+        "phone"
+      ]
+    }
+  ],
+  "infra": {
+    "trackers": {
+      "googletagmanager.com": "Google Tag Manager",
+      "connect.facebook.net": "Meta Pixel"
+    }
+  },
+  "errors": []
+}
